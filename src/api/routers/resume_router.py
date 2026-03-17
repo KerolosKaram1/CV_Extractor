@@ -13,6 +13,7 @@ router = APIRouter()
     status_code=status.HTTP_200_OK,
     summary="Parse a resume/CV into structured sections",
     tags=["resume"],
+    response_model_exclude_none=True,
 )
 async def parse_resume(file: UploadFile = File(...)) -> ResumeResponse:
     """
@@ -43,6 +44,5 @@ async def parse_resume(file: UploadFile = File(...)) -> ResumeResponse:
             detail="An unexpected error occurred while parsing the resume.",
         ) from exc
 
-    # Exclude any fields that were not populated from the output JSON.
-    return ResumeResponse.parse_obj(resume.model_dump(exclude_none=True))
+    return resume
 
